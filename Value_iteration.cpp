@@ -36,6 +36,100 @@ State Value_iteration::perform_action(const State &current_state, const string &
 	return state;
  }
 
+void Value_iteration::valueIteration() {
+
+	bool not_converge = true; // repeat until converge
+	float discount_factor = 0.8; // gamma
+	float value_functionOld = 0, probability = 1.0, threshold = 0.01; // iterate while a certain threshold is reached
+	int iteration = 0;
+
+	vector<State> stateVec;
+	for(int i = 0; i < ROW; i++) {
+ 			for(int j = 0; j < COL; j++) {
+ 				State state(i, j);
+ 				stateVec.push_back(state); // states
+ 			}
+ 		}
+
+ 	float v_array[STATES_NO] = {}; // initialize array v arbitrarily
+	for(int i = 0; i < STATES_NO; i++) {
+		v_array[i] = 0;
+	}
+
+ while(not_converge) {
+ 		float change = 0; // difference between old and new (delta)
+ 		iteration++;
+
+ 	for (auto state : stateVec) {
+ 		vector<float> v_arrayVec;
+	 	value_functionOld = v_array[convert2d_to_1d(state)];
+
+		for(int i = 0; i < NO_ACTIONS; i++) {
+			v_arrayVec.push_back(probability *(reward(state, actions[i]) + discount_factor*v_array[convert2d_to_1d(perform_action(state, actions[i]))]));
+
+		}
+
+ 			v_array[convert2d_to_1d(state)] = *max_element(v_arrayVec.begin(), v_arrayVec.end());
+ 			change = max(change, abs(value_functionOld - v_array[convert2d_to_1d(state)]));
+
+	}
+
+		if(change < threshold) {
+			not_converge = false; // converges
+			iteration++;
+		}
+
+	}
+
+
+string optimal_policy[STATES_NO] = {};
+for(int i = 0; i < STATES_NO; i++) {
+	optimal_policy[i] = "";
+} 
+
+// policy iteration
+for (auto state : stateVec) {
+	vector<string> action;
+	vector<float> policy_valueVec;
+	int optimal_actionIndex = 0;
+	string optimal_action = "";
+
+	//cout << state << endl;
+	for(int i = 0; i < NO_ACTIONS; i++) {
+		policy_valueVec.push_back(probability*(reward(state, actions[i]) + discount_factor*v_array[convert2d_to_1d(perform_action(state, actions[i]))]));
+		action.push_back(actions[i]);
+	}
+
+	float key = *max_element(policy_valueVec.begin(), policy_valueVec.end());
+	
+	auto itr =  find(policy_valueVec.begin(), policy_valueVec.end(), key);
+	optimal_actionIndex = std::distance(policy_valueVec.begin(), itr);
+	
+	optimal_action = action[optimal_actionIndex];
+
+	optimal_policy[convert2d_to_1d(state)] = optimal_action;
+	
+	
+}
+
+		cout << "Question 1" << endl << endl;
+		cout << "Number of iterations for the value iteration to converge: " << iteration << endl << endl;
+
+		int index = 0;
+
+		cout << "Optimal Values (V*): "  << endl;
+		for(auto i : v_array) {
+			cout << grid_world[convert1d_to_2d(index).row][convert1d_to_2d(index).col] << " " << i << endl;
+			index++;
+		}
+
+		cout << endl;
+
+		findState(optimal_policy);
+	
+	}
+
+
 
 void Value_iteration::findState(string optimal_policy[]) {
 	State starting_state(1, 0);
