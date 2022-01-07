@@ -1,7 +1,6 @@
 					Value Iteration
 
 Date 29/05/2020
-Student Number: BGNDEE001
 
 Description:
 Implementation of value iteration algorithm in order to find the optimal value (V*) for each state grid-world.
