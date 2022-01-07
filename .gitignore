@@ -1,0 +1,9 @@
+# Do not track the content of these folders
+value_iteration
+
+# Do not track these compiled source
+
+*.o
+*.exe
+*.gch
+*.txt
