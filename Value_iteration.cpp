@@ -17,6 +17,7 @@ int Value_iteration::reward(const State &state, const string &action) const{
 	else 
 		return 0; // no reward
 
+
 }
 
 State Value_iteration::perform_action(const State &current_state, const string &action) const {
