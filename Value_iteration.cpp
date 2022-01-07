@@ -19,6 +19,24 @@ int Value_iteration::reward(const State &state, const string &action) const{
 
 }
 
+State Value_iteration::perform_action(const State &current_state, const string &action) const {
+	State state(current_state.row, current_state.col);
+
+	if(state.check_equal("s3"))
+		return state; 
+	if(action == "up" && state.row != 1)
+		state.row += 1; // move up
+	else if(action == "down" && state.row != 0) 
+		state.row -= 1; // move down
+	else if(action == "right" && state.col != 2)
+		state.col += 1; // move right
+	else if(action == "left" && state.col != 0)
+		state.col -= 1; // move left
+
+	return state;
+ }
+
+
 void Value_iteration::findState(string optimal_policy[]) {
 	State starting_state(1, 0);
 	State ending_state(1, 2);
